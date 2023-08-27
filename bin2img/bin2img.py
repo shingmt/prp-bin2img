@@ -4,11 +4,20 @@ import os
 import math
 from PIL import Image
 import numpy as np
+from utils.utils import log
 #? for python < 3.9
 from typing import Tuple as tuple
 
+
 class Binary2Image:
-    def __init__(self) -> None:
+
+    _sequence_length = None
+
+    def __init__(self, config) -> None:
+        if 'sequence_length' in config:
+            self._sequence_length = config['sequence_length']
+        else:
+            log(f'[!] No `sequence_length` found in config. Generating byte_code might be affected.')
         pass
 
 
@@ -176,13 +185,16 @@ class Binary2Image:
 
 
     def createSeq(self, filepath, config=None, outdir=None) -> str:
-        if config is None or 'sequence_length' not in config:
-            return ''
-        
-        sequence_length = int(config['sequence_length'])
+        print('[createSeq] config', config, ' | self._sequence_length', self._sequence_length)
+
+        # if config is None or 'sequence_length' not in config:
+        #     return ''
+
+        # sequence_length = int(config['sequence_length'])
+        sequence_length = self._sequence_length
         
         hex_seq_data = self.getHexData(filepath)
-        # print('[createSeq] hex_seq_data', hex_seq_data)
+        print('[createSeq] hex_seq_data', hex_seq_data)
 
         data = ' '.join(str(byte) for byte in hex_seq_data)[:sequence_length*3]
         # print(data)
@@ -203,6 +215,7 @@ class Binary2Image:
             filepath = file_queue.get()
 
             # createGreyScaleImage(filepath, width, outdir)
+            print(f'[Binary2Image][run] out_types = {out_types}')
             if out_types is not None and 'img' in out_types:
                 rgb_path = self.createRGBImage(filepath, width, outdir_img)
                 #? return the path to the image

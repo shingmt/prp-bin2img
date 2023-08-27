@@ -62,7 +62,7 @@ class SilentWorker(SilentWorkerBase):
         #! Add your parts of initializing the model or anything you want here. 
         #! You might want to load everything at this init phase, not reconstructing everything at each request (which shall then be defined in run())
         print('Nooby doo')
-        self.module = Binary2Image()
+        self.module = Binary2Image(config)
         self.dir__bytecode = f'{self.module_outdir}/bytecode'
         self.dir__img = f'{self.module_outdir}/img'
         self.dir__img__set = False
